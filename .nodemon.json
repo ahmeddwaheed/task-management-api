@@ -1,0 +1,10 @@
+{
+    "events": {
+      "restart": "kill-port 8080",
+      "crash": "kill-port 8080"
+    },
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "delay": "1500"
+  }
