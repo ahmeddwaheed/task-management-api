@@ -1,9 +1,16 @@
-import { describe, expect,  beforeEach, afterEach, jest, it } from '@jest/globals';
+import {
+  describe,
+  expect,
+  beforeEach,
+  afterEach,
+  jest,
+  it,
+} from "@jest/globals";
 import { Request, Response, NextFunction } from "express";
 import taskController from "../controllers/taskController";
 import taskService from "../services/taskService";
 import { AppError } from "../utils/errorHandler";
-import Task from '../models/task';
+import Task from "../models/task";
 
 jest.mock("../services/taskService");
 
@@ -11,21 +18,25 @@ describe("Task Controller", () => {
   let mockRequest: Partial<Request>;
   let responseObject: Partial<Response>;
   let mockResponse: Partial<Response> & {
-    status: jest.Mock<any>,
-    json: jest.Mock<any>
+    status: jest.Mock<any>;
+    json: jest.Mock<any>;
   };
   let nextFunction: NextFunction = jest.fn();
 
   beforeEach(() => {
-    mockRequest = { 
-      cookies: { 
-        user: { id: "user123" }
+    mockRequest = {
+      cookies: {
+        user: { id: "user123" },
       },
       query: {},
     };
     mockResponse = {
-      status: jest.fn().mockReturnThis() as jest.MockedFunction<typeof mockResponse.status>,
-      json: jest.fn().mockImplementation((result: any) => { responseObject = result; }) as jest.MockedFunction<typeof mockResponse.json>,
+      status: jest.fn().mockReturnThis() as jest.MockedFunction<
+        typeof mockResponse.status
+      >,
+      json: jest.fn().mockImplementation((result: any) => {
+        responseObject = result;
+      }) as jest.MockedFunction<typeof mockResponse.json>,
     };
   });
 
@@ -35,21 +46,24 @@ describe("Task Controller", () => {
 
   describe("getAllTasks", () => {
     it("should get all tasks for the authenticated user", async () => {
-      const mockTasks: any[] =
-      [
+      const mockTasks: any[] = [
         {
-          "_id": "66ae8052da058f269514d0e8",
+          _id: "66ae8052da058f269514d0e8",
           title: "test title 1",
         },
         {
-          "_id": "66afb787235fbff7fc37c0fc",
+          _id: "66afb787235fbff7fc37c0fc",
           title: "test title 2",
-        }
+        },
       ];
 
-      (taskService.getAllTasks as jest.MockedFunction <typeof taskService.getAllTasks>).mockResolvedValue({
+      (
+        taskService.getAllTasks as jest.MockedFunction<
+          typeof taskService.getAllTasks
+        >
+      ).mockResolvedValue({
         tasks: mockTasks,
-        totalTasks: 2
+        totalTasks: 2,
       });
 
       mockRequest.query = { page: "0", limit: "10" };
@@ -85,9 +99,11 @@ describe("Task Controller", () => {
     });
 
     it("should handle errors from the service layer", async () => {
-      (taskService.getAllTasks  as jest.MockedFunction<typeof taskService.getAllTasks>).mockRejectedValue(
-        new Error("Database error")
-      );
+      (
+        taskService.getAllTasks as jest.MockedFunction<
+          typeof taskService.getAllTasks
+        >
+      ).mockRejectedValue(new Error("Database error"));
 
       await taskController.getAllTasks(
         mockRequest as Request,
@@ -113,7 +129,11 @@ describe("Task Controller", () => {
         ...mockTaskData,
         userId: "user123",
       };
-      (taskService.createTask as jest.MockedFunction <typeof taskService.createTask>).mockResolvedValue(mockCreatedTask);
+      (
+        taskService.createTask as jest.MockedFunction<
+          typeof taskService.createTask
+        >
+      ).mockResolvedValue(mockCreatedTask);
       mockRequest.body = mockTaskData;
 
       await taskController.createTask(
@@ -128,7 +148,8 @@ describe("Task Controller", () => {
       );
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        createdTask: mockCreatedTask, message: "Task created successfully"
+        createdTask: mockCreatedTask,
+        message: "Task created successfully",
       });
     });
 
@@ -168,9 +189,11 @@ describe("Task Controller", () => {
     });
 
     it("should handle errors from the service layer", async () => {
-      (taskService.createTask as jest.MockedFunction <typeof taskService.createTask>).mockRejectedValue(
-        new Error("Database error")
-      );
+      (
+        taskService.createTask as jest.MockedFunction<
+          typeof taskService.createTask
+        >
+      ).mockRejectedValue(new Error("Database error"));
       mockRequest.body = {
         title: "New Task",
         status: "pending",
@@ -186,4 +209,3 @@ describe("Task Controller", () => {
     });
   });
 });
-

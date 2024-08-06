@@ -1,7 +1,7 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 export interface UserType extends Document {
-	id: string;
-	username: string;
-	password: string;
+  id: string;
+  username: string;
+  password: string;
 }
