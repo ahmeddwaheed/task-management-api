@@ -1,39 +1,39 @@
-import mongoose, { Schema } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import { TaskType } from '../types/task';
+import mongoose, { Schema } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
+import { TaskType } from "../types/task";
 
 const taskSchema: Schema = new Schema<TaskType>({
-  id: { 
+  id: {
     type: String,
     default: uuidv4,
-    unique: true
-	},
+    unique: true,
+  },
   title: {
-		type: String,
-		required: true
-	},
+    type: String,
+    required: true,
+  },
   description: {
-		type: String
-	},
+    type: String,
+  },
   status: {
     type: String,
-    enum: ['pending', 'in-progress', 'completed'],
-    default: 'pending',
+    enum: ["pending", "in-progress", "completed"],
+    default: "pending",
   },
   priority: {
     type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'low',
+    enum: ["low", "medium", "high"],
+    default: "low",
   },
-  dueDate: { 
-		type: Date
-	},
-  userId: { 
-		type: String,
-		required: true
-	},
+  dueDate: {
+    type: Date,
+  },
+  userId: {
+    type: String,
+    required: true,
+  },
 });
 
-const Task = mongoose.model<TaskType>('Task', taskSchema);
+const Task = mongoose.model<TaskType>("Task", taskSchema);
 
 export default Task;
